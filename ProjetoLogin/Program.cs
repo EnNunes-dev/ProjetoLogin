@@ -1,15 +1,15 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using ProjetoLogin.Repositores;
 using ProjetoLogin.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
-//REGISTAR O REPOSITÓRIO
+// Registra o repositório: sempre que um controller pedir IUsuarioRepositorio, recebe UsuarioRepositorio
 builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
 
-//CONFIGURA AUTENTICAÇÃO POR COOKIES
+// Configura a autenticação por cookies
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -17,18 +17,17 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
     });
 
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
 }
+
 app.UseRouting();
 
-app.UseAuthentication(); // Autentica quem é o usuario
-app.UseAuthorization(); // autoriza acessos restritos
+app.UseAuthentication(); // Identifica quem é o usuário
+app.UseAuthorization();  // Verifica o acesso às rotas protegidas
 
 app.MapStaticAssets();
 
@@ -36,6 +35,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Conta}/{action=Login}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();
