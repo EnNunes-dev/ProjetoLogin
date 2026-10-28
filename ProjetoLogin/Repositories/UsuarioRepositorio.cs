@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using MySql.Data.MySqlClient;
-using ProjetoLogin.Interface;
 using ProjetoLogin.Models;
 using System.Data;
 
